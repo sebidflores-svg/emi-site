@@ -1,91 +1,192 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <title>Emi 💕</title>
-    <style>
-        body {
-            background-color: #ffc0cb;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-
-        img {
-            width: 300px;
-            margin: 10px;
-            border-radius: 10px;
-        }
-
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 16px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .yes {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        .no {
-            background-color: #f44336;
-            color: white;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>For Emi ❤️</title>
+  <style>
+    body{margin:0;background:#ffc0cb;font-family:Arial,system-ui,sans-serif;text-align:center}
+    .wrap{max-width:900px;margin:0 auto;padding:18px}
+    h1{margin:10px 0 6px}
+    p{margin:6px 0 14px}
+    .topbar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 14px}
+    button{padding:10px 16px;border:0;border-radius:10px;cursor:pointer;font-size:16px}
+    .primary{background:#111;color:#fff}
+    .ghost{background:rgba(255,255,255,.7)}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:12px 0}
+    .nav button{min-width:110px}
+    .counter{font-weight:700}
+    .card{background:rgba(255,255,255,.55);border-radius:16px;padding:14px}
+    img,video{max-width:100%;border-radius:14px}
+    video{background:#000}
+    .question{display:none;margin-top:14px}
+    .qBtns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    .yes{background:#2e7d32;color:#fff}
+    .no{background:#c62828;color:#fff}
+    .result{display:none;margin-top:10px;font-weight:700}
+    .small{font-size:13px;opacity:.8;margin-top:8px}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <h1>Hi Emi ❤️</h1>
+    <p>I made you a tiny website with a few of my favorite memories… and one important question at the end</p>
 
-    <h1>Hi Emi 💖</h1>
-    <p>This is for you 🙂</p>
+    <div class="topbar">
+      <button class="primary" id="startMusicBtn">Start music</button>
+      <button class="ghost" id="skipBtn">Skip to the question</button>
+    </div>
 
-    <!-- SONG -->
-    <audio controls autoplay loop>
-        <source src="song.mp3" type="audio/mpeg">
-    </audio>
+    <!-- Audio (must be triggered by a click to reliably play) -->
+    <audio id="bgMusic" src="song.mp3" loop></audio>
+    <audio id="yesVoice" src="joke01.mp3"></audio>
+    <audio id="noVoice"  src="joke02.mp3"></audio>
 
-    <h2>Our Memories 📸</h2>
+    <div class="nav">
+      <button class="ghost" id="prevBtn">⬅ Prev</button>
+      <div class="counter"><span id="countNow">1</span> / <span id="countTotal">1</span></div>
+      <button class="ghost" id="nextBtn">Next ➡</button>
+    </div>
 
-    <img src="pic01.jpg">
-    <img src="pic02.jpg">
-    <img src="pic03.jpg">
-    <img src="pic04.jpg">
-    <img src="pic05.jpg">
-    <img src="pic06.jpg">
-    <img src="pic07.jpg">
-    <img src="pic08.jpg">
-    <img src="pic09.jpg">
-    <img src="pic10.jpg">
+    <div class="card" id="slideBox"></div>
 
-    <h2>Funny Moments 😂</h2>
+    <div class="small">When you reach the end, the question pops up automatically.</div>
 
-    <audio controls>
-        <source src="joke01.mp3" type="audio/mpeg">
-    </audio>
+    <div class="question" id="questionBox">
+      <h2>Emi… will you be my Valentine?</h2>
+      <div>Choose wisely 😌</div>
 
-    <audio controls>
-        <source src="joke02.mp3" type="audio/mpeg">
-    </audio>
+      <div class="qBtns">
+        <button class="yes" id="yesBtn">YES</button>
+        <button class="no" id="noBtn">no</button>
+      </div>
 
-    <h2>Videos 🎥</h2>
+      <div class="result" id="yesResult">YAAAY!! ❤️</div>
+      <div class="result" id="noResult">Aww 😢 (you can click “Ask again”)</div>
 
-    <video width="300" controls>
-        <source src="vid01.mp4" type="video/mp4">
-    </video>
+      <div id="afterYes" style="display:none; margin-top:12px;">
+        <div>Please enjoy this romantic wildlife moment:</div>
+        <div style="margin-top:10px;">
+          <img src="kiss.jpg" alt="kiss" />
+        </div>
+      </div>
 
-    <video width="300" controls>
-        <source src="vid02.mp4" type="video/mp4">
-    </video>
+      <div style="margin-top:12px;">
+        <button class="ghost" id="askAgainBtn">Ask again</button>
+      </div>
+    </div>
+  </div>
 
-    <h2>One Last Question 💘</h2>
+  <script>
+    // Slides (all files are in the root folder)
+    const slides = [
+      { type: "img", src: "pic01.jpg" },
+      { type: "img", src: "pic02.jpg" },
+      { type: "img", src: "pic03.jpg" },
+      { type: "img", src: "pic04.jpg" },
+      { type: "img", src: "pic05.jpg" },
+      { type: "img", src: "pic06.jpg" },
+      { type: "img", src: "pic07.jpg" },
+      { type: "img", src: "pic08.jpg" },
+      { type: "img", src: "pic09.jpg" },
+      { type: "img", src: "pic10.jpg" },
+      { type: "video", src: "vid01.mp4" },
+      { type: "video", src: "vid02.mp4" },
+    ];
 
-    <img src="kiss.jpg">
+    let i = 0;
 
-    <br>
+    const slideBox = document.getElementById("slideBox");
+    const countNow = document.getElementById("countNow");
+    const countTotal = document.getElementById("countTotal");
+    const questionBox = document.getElementById("questionBox");
 
-    <button class="yes" onclick="alert('YAYYY ❤️')">Yes</button>
-    <button class="no" onclick="alert('Oh no 😢')">No</button>
+    const bgMusic = document.getElementById("bgMusic");
+    const yesVoice = document.getElementById("yesVoice");
+    const noVoice  = document.getElementById("noVoice");
 
+    // Buttons
+    document.getElementById("startMusicBtn").onclick = async () => {
+      try { await bgMusic.play(); } catch (e) {}
+    };
+
+    document.getElementById("prevBtn").onclick = () => {
+      if (i > 0) i--;
+      render();
+    };
+
+    document.getElementById("nextBtn").onclick = () => {
+      if (i < slides.length - 1) i++;
+      render();
+      if (i === slides.length - 1) showQuestion(); // when last slide reached
+    };
+
+    document.getElementById("skipBtn").onclick = () => {
+      showQuestion();
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    };
+
+    function stopAllVoices() {
+      yesVoice.pause(); yesVoice.currentTime = 0;
+      noVoice.pause();  noVoice.currentTime  = 0;
+    }
+
+    function render() {
+      countTotal.textContent = slides.length;
+      countNow.textContent = (i + 1);
+
+      const s = slides[i];
+      slideBox.innerHTML = "";
+
+      // stop video audio when switching slides
+      const oldVid = slideBox.querySelector("video");
+      if (oldVid) oldVid.pause();
+
+      if (s.type === "img") {
+        const img = document.createElement("img");
+        img.src = s.src;
+        img.alt = "memory";
+        slideBox.appendChild(img);
+      } else {
+        const vid = document.createElement("video");
+        vid.src = s.src;
+        vid.controls = true;
+        vid.playsInline = true;
+        vid.style.maxWidth = "100%";
+        slideBox.appendChild(vid);
+      }
+    }
+
+    function showQuestion() {
+      questionBox.style.display = "block";
+    }
+
+    // YES / NO behavior: play voice messages AFTER the click
+    document.getElementById("yesBtn").onclick = async () => {
+      stopAllVoices();
+      document.getElementById("noResult").style.display = "none";
+      document.getElementById("yesResult").style.display = "block";
+      document.getElementById("afterYes").style.display = "block";
+      try { await yesVoice.play(); } catch (e) {}
+    };
+
+    document.getElementById("noBtn").onclick = async () => {
+      stopAllVoices();
+      document.getElementById("yesResult").style.display = "none";
+      document.getElementById("afterYes").style.display = "none";
+      document.getElementById("noResult").style.display = "block";
+      try { await noVoice.play(); } catch (e) {}
+    };
+
+    document.getElementById("askAgainBtn").onclick = () => {
+      stopAllVoices();
+      document.getElementById("yesResult").style.display = "none";
+      document.getElementById("noResult").style.display = "none";
+      document.getElementById("afterYes").style.display = "none";
+    };
+
+    // init
+    render();
+  </script>
 </body>
 </html>
