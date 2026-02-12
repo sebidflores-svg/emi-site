@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>For Emi ❤️</title>
+
+<style>
+:root{
+--bg1:#ffdde1; --bg2:#ee9ca7;
+--card:#ffffffcc; --text:#1f1f1f;
+--accent:#ff3d7f; --yes:#22c55e; --no:#ef4444;
+}
+*{box-sizing:border-box}
+body{
+margin:0; min-height:100vh;
+font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+color:var(--text);
+background: radial-gradient(900px 500px at 20% 10%, #fff 0%, transparent 60%),
+linear-gradient(135deg,var(--bg1),var(--bg2));
+overflow-x:hidden;
+}
+.wrap{width:min(920px,92vw); margin:22px auto 40px;}
+.bar{
+display:flex; align-items:center; justify-content:space-between; gap:10px;
+padding:14px 16px; border-radius:18px;
+background:#ffffffb8; border:1px solid #ffffff80;
+box-shadow:0 14px 40px #00000014;
+backdrop-filter: blur(10px);
+position: sticky; top: 12px; z-index: 10;
+}
+.brand{font-weight:900}
+.muted{opacity:.7; font-size:13px}
+button{
+border:0; padding:10px 14px; border-radius:14px;
+font-weight:900; cursor:pointer;
+box-shadow:0 10px 22px #00000014;
+transition: transform .08s ease, filter .2s ease;
+}
+button:active{transform: translateY(1px) scale(.99)}
+.btn-accent{background:var(--accent); color:#fff}
+.btn-ghost{background:#fff; color:#111}
+.card{
+margin-top:14px;
+background:var(--card);
+border:1px solid #ffffff70;
+border-radius:24px;
+padding:18px;
+box-shadow:0 20px 60px #00000018;
+backdrop-filter: blur(10px);
+}
+h1{margin:0 0 8px; font-size: clamp(26px,4vw,44px);}
+p{margin:0; font-size:18px; line-height:1.45}
+.viewer{
+border-radius:20px;
+overflow:hidden;
+border:1px solid #ffffff80;
+background:#fff;
+box-shadow: 0 14px 30px #00000014;
+min-height: 420px;
+display:grid; place-items:center;
+position:relative;
+}
+.viewer img, .viewer video{
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+background:#000;
+}
+.label{
+position:absolute; left:12px; bottom:12px;
+background:#ffffffd8;
+padding:8px 10px;
+border-radius:14px;
+font-weight:900;
+border:1px solid #ffffff90;
+}
+.controls{
+display:flex; gap:10px; flex-wrap:wrap;
+align-items:center; justify-content:space-between;
+margin-top:12px;
+}
+.leftControls{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.progress{font-weight:900}
+.overlay{
+position:fixed; inset:0;
+background:#00000066;
+display:none;
+place-items:center;
+z-index:999;
+padding:16px;
+}
+.overlay.show{display:grid;}
+.modal{
+width:min(620px, 96vw);
+background:#ffffffee;
+border:1px solid #ffffff90;
+border-radius:24px;
+padding:20px;
+box-shadow: 0 30px 80px #00000035;
+position:relative;
+overflow:hidden;
+}
+.modal h2{margin:0 0 8px; font-size: clamp(24px,4vw,34px);}
+.btns{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:14px;}
+.btn-yes{background:var(--yes); color:#fff; font-size:18px; padding:12px 18px}
+.btn-no{background:var(--no); color:#fff; font-size:18px; padding:12px 18px}
+.small{font-size:14px; opacity:.75}
+.hidden{display:none}
+.yesScreen{
+display:grid; gap:12px;
+place-items:center;
+text-align:center;
+margin-top:8px;
+}
+.big{font-size: clamp(20px,3vw,26px); font-weight:900}
+.kissImg{
+width:min(520px, 92%);
+border-radius:20px;
+border:1px solid #ffffff90;
+box-shadow:0 18px 40px #00000025;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="bar">
+<div>
+<div class="brand">For Emi ❤️</div>
+<div class="muted">Click “Start music” then go through the memories.</div>
+</div>
+<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;">
+<button class="btn-accent" id="musicBtn">Start music 🎵</button>
+<button class="btn-ghost" id="questionBtn">Skip to the question 💘</button>
+</div>
+</div>
+
+<div class="card">
+<h1>Hi Emi ❤️</h1>
+<p>I made you a tiny website with a few of my favorite memories… and one important question at the end 😌</p>
+<div class="viewer" id="viewer" style="margin-top:14px;"></div>
+<div class="controls">
+<div class="leftControls">
+<button class="btn-ghost" id="prevBtn">⬅ Prev</button>
+<button class="btn-accent" id="nextBtn">Next ➡</button>
+</div>
+<div class="progress" id="progress">1 / 12</div>
+</div>
+<div class="muted">When you reach the end, the question pops up automatically.</div>
+</div>
+</div>
+
+<audio id="bgm" preload="auto" loop>
+<source src="media/song.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="joke1" preload="auto">
+<source src="media/joke01.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="joke2" preload="auto">
+<source src="media/joke02.mp3" type="audio/mpeg">
+</audio>
+
+<div class="overlay" id="overlay">
+<div class="modal">
+<div id="askView">
+<h2>Emi… will you be my Valentine? 💘</h2>
+<p class="small">Choose wisely 😌</p>
+<div class="btns">
+<button class="btn-yes" id="yesBtn">YES 💞</button>
+<button class="btn-no" id="noBtn">no 😅</button>
+</div>
+<p class="small" id="noMessage" style="text-align:center; margin-top:10px;"></p>
+</div>
+
+<div id="yesView" class="hidden yesScreen">
+<div class="big">YAAAY!! ❤️🎉</div>
+<div class="small">Please enjoy this romantic wildlife moment:</div>
+<img class="kissImg" src="media/kiss.jpg">
+<button class="btn-accent" id="askAgainBtn">Ask again 💘</button>
+</div>
+</div>
+</div>
+
+<script>
+const ITEMS = [
+{ type:"image", src:"media/pic01.jpg", caption:"Memory #1 ❤️" },
+{ type:"image", src:"media/pic02.jpg", caption:"Memory #2 ❤️" },
+{ type:"image", src:"media/pic03.jpg", caption:"Memory #3 ❤️" },
+{ type:"image", src:"media/pic04.jpg", caption:"Memory #4 ❤️" },
+{ type:"image", src:"media/pic05.jpg", caption:"Memory #5 ❤️" },
+{ type:"image", src:"media/pic06.jpg", caption:"Memory #6 ❤️" },
+{ type:"image", src:"media/pic07.jpg", caption:"Memory #7 ❤️" },
+{ type:"image", src:"media/pic08.jpg", caption:"Memory #8 ❤️" },
+{ type:"image", src:"media/pic09.jpg", caption:"Memory #9 ❤️" },
+{ type:"image", src:"media/pic10.jpg", caption:"Memory #10 ❤️" },
+{ type:"video", src:"media/vid01.mp4", caption:"Video moment #1 🎬" },
+{ type:"video", src:"media/vid02.mp4", caption:"Video moment #2 🎬" }
+];
+
+let idx = 0;
+const viewer = document.getElementById("viewer");
+const progress = document.getElementById("progress");
+
+function render(){
+const item = ITEMS[idx];
+viewer.innerHTML = "";
+const label = document.createElement("div");
+label.className = "label";
+label.textContent = item.caption;
+viewer.appendChild(label);
+
+if(item.type === "video"){
+const v = document.createElement("video");
+v.src = item.src;
+v.controls = true;
+viewer.appendChild(v);
+} else {
+const img = document.createElement("img");
+img.src = item.src;
+viewer.appendChild(img);
+}
+
+progress.textContent = `${idx+1} / ${ITEMS.length}`;
+if(idx === ITEMS.length - 1){
+setTimeout(()=> overlay.classList.add("show"), 900);
+}
+}
+
+document.getElementById("nextBtn").onclick = ()=>{ if(idx < ITEMS.length-1) idx++; render(); };
+document.getElementById("prevBtn").onclick = ()=>{ if(idx > 0) idx--; render(); };
+
+document.getElementById("musicBtn").onclick = ()=> document.getElementById("bgm").play();
+
+const overlay = document.getElementById("overlay");
+document.getElementById("questionBtn").onclick = ()=> overlay.classList.add("show");
+
+document.getElementById("noBtn").onclick = ()=>{
+document.getElementById("joke1").play();
+document.getElementById("noMessage").textContent = "LOL nice try 😭 Click YES 😌";
+};
+
+document.getElementById("yesBtn").onclick = ()=>{
+document.getElementById("askView").classList.add("hidden");
+document.getElementById("yesView").classList.remove("hidden");
+document.getElementById("joke2").play();
+};
+
+document.getElementById("askAgainBtn").onclick = ()=>{
+document.getElementById("askView").classList.remove("hidden");
+document.getElementById("yesView").classList.add("hidden");
+};
+
+render();
+</script>
+</body>
+</html>
